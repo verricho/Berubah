@@ -3,15 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Motivational To-Do</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Daily Motivational To-Do</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #1e1e2f, #2c3e50);
+      color: #ecf0f1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 2.5rem;
+      color: #00cec9;
+    }
+
+    .todo-container {
+      background: #2d3436;
+      padding: 30px;
+      margin-top: 20px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .task input[type="checkbox"] {
+      margin-right: 15px;
+      width: 20px;
+      height: 20px;
+      accent-color: #00cec9;
+    }
+
+    .task label {
+      font-size: 1.2rem;
+    }
+
+    .motivasi {
+      margin-top: 30px;
+      font-style: italic;
+      color: #b2bec3;
+      text-align: center;
+      max-width: 600px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Weekly Motivational To-Do List</h1>
+  <h1>Daily Motivational To-Do List</h1>
   <div class="todo-container" id="todoList"></div>
   <div class="motivasi">
     "Setiap hari adalah kesempatan baru untuk menjadi versi terbaik dari dirimu."
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    const tasks = [
+      "06.00 - Bangun & berdoa malaikat Tuhan",
+      "06.30 - Olahraga & mandi",
+      "07.00 - OTW Kampus",
+      "07.30 - Ngampus",
+      "12.00 - Makan & malaikat Tuhan",
+      "16.30 - Pulang kampus",
+      "17.00 - Istirahat",
+      "18.00 - Makan & malaikat Tuhan",
+      "18.30 - Belajar",
+      "20.00 - Workout",
+      "21.00 - Rehat & mandi",
+      "21.30 - Prepare tidur",
+      "22.00 - Tidur"
+    ];
+
+    const todoList = document.getElementById('todoList');
+
+    function renderTasks() {
+      todoList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'task';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `task-${index}`;
+        checkbox.checked = localStorage.getItem(`task-${index}`) === 'true';
+        checkbox.addEventListener('change', () => {
+          localStorage.setItem(`task-${index}`, checkbox.checked);
+        });
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `task-${index}`);
+        label.textContent = task;
+
+        taskDiv.appendChild(checkbox);
+        taskDiv.appendChild(label);
+        todoList.appendChild(taskDiv);
+      });
+    }
+
+    function resetDaily() {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const lastReset = localStorage.getItem('lastReset');
+
+      if (lastReset !== today) {
+        tasks.forEach((_, index) => {
+          localStorage.removeItem(`task-${index}`);
+        });
+        localStorage.setItem('lastReset', today);
+      }
+    }
+
+    window.onload = () => {
+      resetDaily();
+      renderTasks();
+    };
+  </script>
 </body>
-</html
+  </html>
